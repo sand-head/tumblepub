@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bloq.Server", "Bloq.Server\Bloq.Server.csproj", "{58D0AB98-5B0F-45F8-B35D-EC0437E01988}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bloq.Server", "Bloq.Server\Bloq.Server.csproj", "{58D0AB98-5B0F-45F8-B35D-EC0437E01988}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bloq.Client", "Bloq.Client\Bloq.Client.csproj", "{919BBD69-C5CB-4A4A-A4A0-D7C0350CBCD3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bloq.Client", "Bloq.Client\Bloq.Client.csproj", "{919BBD69-C5CB-4A4A-A4A0-D7C0350CBCD3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bloq.Shared", "Bloq.Shared\Bloq.Shared.csproj", "{22972464-F318-4440-89B4-45BE90D4C045}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bloq.Shared", "Bloq.Shared\Bloq.Shared.csproj", "{22972464-F318-4440-89B4-45BE90D4C045}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
