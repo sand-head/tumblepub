@@ -1,7 +1,11 @@
 using Bloq.Database;
 using Bloq.Database.Models;
+using Bloq.Shared;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Server;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.ResponseCompression;
@@ -42,6 +46,12 @@ namespace Bloq.Server
 
             services.AddControllersWithViews();
             services.AddRazorPages();
+            services.AddScoped<AuthenticationStateProvider, ServerAuthenticationStateProvider>()
+                .AddScoped<SignOutSessionStateManager>();
+
+            services.AddSingleton(new RenderingContext { IsPrerendering = true });
+
+            Client.Program.ConfigureSharedServices(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

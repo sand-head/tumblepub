@@ -1,3 +1,4 @@
+using Bloq.Shared;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -25,7 +26,18 @@ namespace Bloq.Client
 
             builder.Services.AddApiAuthorization();
 
+            builder.Services.AddSingleton<RenderingContext>();
+    
+            ConfigureSharedServices(builder.Services);
+
             await builder.Build().RunAsync();
+        }
+
+        public static void ConfigureSharedServices(IServiceCollection services)
+        {
+            // I don't really understand why Microsoft said I should make this
+            // if they weren't going to populate it with anything
+            // I guess I'll keep it, cause I'll probably need it at some point
         }
     }
 }
