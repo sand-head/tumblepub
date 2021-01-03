@@ -48,42 +48,18 @@ namespace Bloq.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DeviceCodes",
+                name: "Blog",
                 columns: table => new
                 {
-                    UserCode = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    DeviceCode = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    SubjectId = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
-                    SessionId = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
-                    ClientId = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    Description = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
-                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    Expiration = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    Data = table.Column<string>(type: "character varying(50000)", maxLength: 50000, nullable: false)
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    DisplayName = table.Column<string>(type: "text", nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    UpdatedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DeviceCodes", x => x.UserCode);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PersistedGrants",
-                columns: table => new
-                {
-                    Key = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    Type = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    SubjectId = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
-                    SessionId = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
-                    ClientId = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    Description = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
-                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    Expiration = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
-                    ConsumedTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
-                    Data = table.Column<string>(type: "character varying(50000)", maxLength: 50000, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PersistedGrants", x => x.Key);
+                    table.PrimaryKey("PK_Blog", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -132,8 +108,8 @@ namespace Bloq.Database.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
-                    ProviderKey = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(type: "text", nullable: false),
+                    ProviderKey = table.Column<string>(type: "text", nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "text", nullable: true),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
@@ -177,8 +153,8 @@ namespace Bloq.Database.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    LoginProvider = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
-                    Name = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
                     Value = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
@@ -188,6 +164,30 @@ namespace Bloq.Database.Migrations
                         name: "FK_AspNetUserTokens_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BlogBloqUser",
+                columns: table => new
+                {
+                    BlogsId = table.Column<Guid>(type: "uuid", nullable: false),
+                    UsersId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BlogBloqUser", x => new { x.BlogsId, x.UsersId });
+                    table.ForeignKey(
+                        name: "FK_BlogBloqUser_AspNetUsers_UsersId",
+                        column: x => x.UsersId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BlogBloqUser_Blog_BlogsId",
+                        column: x => x.BlogsId,
+                        principalTable: "Blog",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -230,30 +230,9 @@ namespace Bloq.Database.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_DeviceCodes_DeviceCode",
-                table: "DeviceCodes",
-                column: "DeviceCode",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_DeviceCodes_Expiration",
-                table: "DeviceCodes",
-                column: "Expiration");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PersistedGrants_Expiration",
-                table: "PersistedGrants",
-                column: "Expiration");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PersistedGrants_SubjectId_ClientId_Type",
-                table: "PersistedGrants",
-                columns: new[] { "SubjectId", "ClientId", "Type" });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PersistedGrants_SubjectId_SessionId_Type",
-                table: "PersistedGrants",
-                columns: new[] { "SubjectId", "SessionId", "Type" });
+                name: "IX_BlogBloqUser_UsersId",
+                table: "BlogBloqUser",
+                column: "UsersId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -274,16 +253,16 @@ namespace Bloq.Database.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "DeviceCodes");
-
-            migrationBuilder.DropTable(
-                name: "PersistedGrants");
+                name: "BlogBloqUser");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Blog");
         }
     }
 }

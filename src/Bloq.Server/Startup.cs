@@ -8,11 +8,13 @@ using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 using System.Linq;
 
 namespace Bloq.Server
@@ -32,17 +34,13 @@ namespace Bloq.Server
         {
             services.AddDbContext<BloqDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("PostgreSQL")));
+            services.AddIdentity<BloqUser, IdentityRole<Guid>>()
+                .AddEntityFrameworkStores<BloqDbContext>()
+                .AddDefaultTokenProviders();
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddDefaultIdentity<BloqUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<BloqDbContext>();
-
-            services.AddIdentityServer()
-                .AddApiAuthorization<BloqUser, BloqDbContext>();
-
-            services.AddAuthentication()
-                .AddIdentityServerJwt();
+            services.AddAuthentication();
 
             services.AddControllersWithViews();
             services.AddRazorPages();
@@ -60,7 +58,6 @@ namespace Bloq.Server
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseMigrationsEndPoint();
                 app.UseWebAssemblyDebugging();
             }
             else
@@ -75,8 +72,6 @@ namespace Bloq.Server
             app.UseStaticFiles();
 
             app.UseRouting();
-
-            app.UseIdentityServer();
             app.UseAuthentication();
             app.UseAuthorization();
 
